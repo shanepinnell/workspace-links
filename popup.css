@@ -1,0 +1,108 @@
+:root {
+  --bg: #ffffff;
+  --fg: #1f1f1f;
+  --muted: #5f6368;
+  --hover: #f1f3f4;
+  --border: #dadce0;
+  --accent: #1a73e8;
+  --success: #188038;
+  --success-bg: rgba(24, 128, 56, 0.14);
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #202124;
+    --fg: #e8eaed;
+    --muted: #9aa0a6;
+    --hover: #303134;
+    --border: #3c4043;
+    --accent: #8ab4f8;
+    --success: #81c995;
+    --success-bg: rgba(129, 201, 149, 0.18);
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  width: 220px;
+  padding: 8px;
+  font: 13px/1.4 system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px 8px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+h2 {
+  margin: 10px 4px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.list { display: flex; flex-direction: column; }
+.list button {
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.list button:hover, .list button:focus-visible { background: var(--hover); }
+.file-icon { width: 16px; height: 19px; flex: none; }
+/* Material Symbols drawn through a mask, coloured by `color`. */
+.ms {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  background: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+.hack-icon {
+  margin: 0.5px -1px; /* line up with the 16x19 file icons */
+  color: var(--muted);
+}
+
+/* Copy hint on link items */
+.copy-hint {
+  margin-left: auto;
+  display: grid;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 120ms;
+}
+.copy-hint .ms {
+  grid-area: 1 / 1;
+  width: 16px;
+  height: 16px;
+}
+.copy-hint .i-check { visibility: hidden; }
+.list button:hover .copy-hint,
+.list button:focus-visible .copy-hint { opacity: 1; }
+
+.list button.copied { animation: copied-flash 900ms ease-out; }
+.list button.copied .copy-hint { opacity: 1; color: var(--success); }
+.list button.copied .i-copy { visibility: hidden; }
+.list button.copied .i-check { visibility: visible; }
+@keyframes copied-flash {
+  0%, 25% { background: var(--success-bg); }
+  100%    { background: transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .list button.copied { animation: none; background: var(--success-bg); }
+}
+.list button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+#unsupported { margin: 10px 4px; color: var(--muted); }
+#toast { margin: 6px 4px 0; min-height: 1em; color: var(--accent); }
+#toast:empty { display: none; }

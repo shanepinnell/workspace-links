@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>GSuite URL Hacks</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <header>
+      <img src="icons/icon32.png" alt="" width="16" height="16">
+      <span id="app">GSuite URL Hacks</span>
+    </header>
+
+    <p id="unsupported" hidden>Open a Google Doc, Sheet, Slide deck or Drawing to use these.</p>
+
+    <main id="actions" hidden>
+      <section>
+        <h2>URL Hacks</h2>
+        <div class="list" data-group="link"></div>
+      </section>
+      <section>
+        <h2>Download</h2>
+        <div class="list" data-group="download"></div>
+      </section>
+    </main>
+
+    <p id="toast" role="status"></p>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

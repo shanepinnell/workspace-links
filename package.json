@@ -1,0 +1,8 @@
+{
+  "name": "gsuite-url-hacks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
