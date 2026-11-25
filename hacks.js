@@ -1,4 +1,4 @@
-// Shared URL logic for the popup and the context menu.
+// URL logic for the popup (kept separate so it can be unit-tested).
 
 // https://docs.google.com/<app>/[u/<n>/]d/<id>/...
 const DOC_URL = /^https:\/\/docs\.google\.com\/(document|spreadsheets|presentation|drawings)\/((?:u\/\d+\/)?d\/[A-Za-z0-9_-]+)/;

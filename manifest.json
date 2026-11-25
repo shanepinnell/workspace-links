@@ -21,9 +21,5 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "background": {
-    "service_worker": "background.js",
-    "type": "module"
-  },
-  "permissions": ["activeTab", "contextMenus", "scripting", "downloads"]
+  "permissions": ["activeTab", "downloads"]
 }

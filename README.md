@@ -32,10 +32,6 @@ Multi-account URLs (`/u/1/d/…`) keep their account index.
 - **Open Google Drive** — opens drive.google.com in a new tab.
 - **Create new:** Document, Spreadsheet, Presentation or Drawing, via Google's `docs.new`, `sheets.new`, `slides.new` and `drawings.new` shortcuts (created in your default Google account).
 
-## Right-click menu
-
-The same Share and Download actions appear under *Workspace Links* when you right-click a Docs, Sheets, Slides or Drawings page. A green ✓ on the toolbar icon confirms a copied link.
-
 ## Design
 
 The popup follows Material Design 3: Google's GM3 colour roles in light and dark mode, the M3 type scale, state layers, press ripples and snackbars. Icons are Material Symbols, and Roboto is bundled so headings render at the correct weight on any system.
@@ -45,7 +41,7 @@ The popup follows Material Design 3: Google's GM3 colour roles in light and dark
 1. Open `chrome://extensions` and turn on **Developer mode**.
 2. Click **Load unpacked** and choose this folder.
 
-Permissions: `activeTab` (read the current tab's URL when you use the extension), `contextMenus`, `scripting` (copy to the clipboard from the right-click menu) and `downloads`.
+Permissions: `activeTab` (read the current tab's URL when you open the popup) and `downloads`.
 
 ## Test
 
