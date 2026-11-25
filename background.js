@@ -6,7 +6,7 @@ const PATTERNS = ['document', 'spreadsheets', 'presentation', 'drawings']
 // Right-click menu on Docs/Sheets/Slides/Drawings pages.
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.removeAll(() => {
-    chrome.contextMenus.create({ id: 'root', title: 'GSuite URL Hacks', contexts: ['page'], documentUrlPatterns: PATTERNS });
+    chrome.contextMenus.create({ id: 'root', title: 'Workspace Links', contexts: ['page'], documentUrlPatterns: PATTERNS });
     for (const a of ACTIONS) {
       // Only show an item on the apps it supports.
       const patterns = Object.keys(a.path).map((app) => `https://docs.google.com/${app}/*`);

@@ -1,4 +1,4 @@
-# GSuite URL Hacks
+# Workspace Links
 
 A Chrome/Chromium extension (Manifest V3) that rewrites the URL of the Google Doc, Sheet, Slide deck or Drawing in the current tab.
 
@@ -14,7 +14,7 @@ A Chrome/Chromium extension (Manifest V3) that rewrites the URL of the Google Do
 Link actions **copy the rewritten URL** to the clipboard, ready to paste into an email or page. Download actions save the file through Chromium's downloads, leaving the tab where it is.
 
 - **Popup:** click the toolbar icon. Only the actions that apply to the open app are shown.
-- **Right-click menu:** the same actions under *GSuite URL Hacks* on any Docs, Sheets, Slides or Drawings page. A green ✓ on the toolbar icon confirms the copy.
+- **Right-click menu:** the same actions under *Workspace Links* on any Docs, Sheets, Slides or Drawings page. A green ✓ on the toolbar icon confirms the copy.
 - Multi-account URLs (`/u/1/d/…`) keep their account index.
 
 ## Install
