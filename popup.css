@@ -2,6 +2,21 @@
  * Material Design 3, styled after Google Workspace menus.
  * Colour roles use Google's Material 3 (GM3) baseline values; type follows the M3 type scale.
  */
+@font-face {
+  font-family: "Roboto Bundled";
+  src: url("fonts/roboto-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block; /* local file: no flash of fallback text */
+}
+@font-face {
+  font-family: "Roboto Bundled";
+  src: url("fonts/roboto-latin-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
 :root {
   color-scheme: light dark;
 
@@ -21,8 +36,8 @@
   --md-sys-state-focus: 0.10;
   --md-sys-state-pressed: 0.10;
 
-  /* Type */
-  --md-ref-typeface: "Google Sans Text", Roboto, system-ui, sans-serif;
+  /* Type: bundled Roboto (fonts/, OFL-1.1) so 400 vs 500 weights render everywhere */
+  --md-ref-typeface: "Roboto Bundled", Roboto, system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -50,6 +65,26 @@ body {
   font: 400 14px/20px var(--md-ref-typeface);
   letter-spacing: 0.25px;
   -webkit-font-smoothing: antialiased;
+}
+
+/* App header: compact bar, 20px icon, title-medium */
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  margin-top: -8px; /* sit flush with the top of the popup */
+  padding: 0 12px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  margin-bottom: 8px;
+}
+header img { width: 20px; height: 20px; flex: none; }
+h1 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.15px;
 }
 
 /* Dividers between sections */
@@ -87,6 +122,8 @@ h2 {
   overflow: hidden; /* clip the ripple */
   color: var(--md-sys-color-on-surface);
 }
+/* Items under a heading are indented one step, like Google's app menus. */
+h2 + .list button { padding-left: 24px; }
 
 /* State layer */
 .list button::before {

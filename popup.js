@@ -109,7 +109,7 @@ const doc = parseDocUrl(tab?.url);
 
 // Shown on pages that aren't a Google editor. Colours are the apps' own.
 const HOME_ITEMS = [
-  { group: 'drive', label: 'Open Google Drive', url: 'https://drive.google.com/', icon: 'folder_open' },
+  { group: 'drive', label: 'Open Google Drive', url: 'https://drive.google.com/', icon: 'drive_export' },
   { group: 'new', label: 'Document',     url: 'https://docs.new',     icon: 'description-fill', color: '#4285f4' },
   { group: 'new', label: 'Spreadsheet',  url: 'https://sheets.new',   icon: 'table_chart-fill', color: '#0f9d58' },
   { group: 'new', label: 'Presentation', url: 'https://slides.new',   icon: 'slideshow-fill',   color: '#f4b400' },
