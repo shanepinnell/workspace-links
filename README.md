@@ -49,7 +49,9 @@ Permissions: `activeTab` (read the current tab's URL when you open the popup) an
 node --test
 ```
 
-## Credits
+## License
+
+[MIT](LICENSE) © 2026 Shane Pinnell. Bundled third-party assets keep their own licenses:
 
 - Icons: [Material Symbols](https://fonts.google.com/icons), Apache License 2.0 — see `icons/material/`.
 - Font: [Roboto](https://github.com/googlefonts/roboto-classic) via Fontsource, SIL Open Font License 1.1 — see `fonts/`.
