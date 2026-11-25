@@ -1,29 +1,59 @@
 # Workspace Links
 
-A Chrome/Chromium extension (Manifest V3) that rewrites the URL of the Google Doc, Sheet, Slide deck or Drawing in the current tab.
+A Chrome/Chromium extension (Manifest V3) for sharing and downloading Google Docs, Sheets, Slides and Drawings. Click the toolbar icon on any of them to copy a special-purpose link or download the file — no hand-editing URLs.
 
-| Action            | URL suffix                          | Does          | Docs | Sheets | Slides | Drawings |
-|-------------------|-------------------------------------|---------------|:----:|:------:|:------:|:--------:|
-| Copy              | `/copy`                             | Copies link   | ✓ | ✓ | ✓ | ✓ |
-| Preview           | `/preview`                          | Copies link   | ✓ | ✓ | ✓ | ✓ |
-| Template          | `/template/preview`                 | Copies link   | ✓ | ✓ | ✓ |   |
-| Download PDF      | `/export?format=pdf`, `/export/pdf` | Downloads PDF | ✓ | ✓ | ✓ | ✓ |
-| Download CSV      | `/export?format=csv&gid=…`          | Downloads CSV of the current sheet |   | ✓ |   |   |
-| Download PNG / SVG | `/export/png`, `/export/svg` (`?pageid=…` on Slides) | Downloads image of the current slide or drawing |   |   | ✓ | ✓ |
+## On a Docs, Sheets, Slides or Drawings page
 
-Link actions **copy the rewritten URL** to the clipboard, ready to paste into an email or page. Download actions save the file through Chromium's downloads, leaving the tab where it is.
+**Share as:** copies a rewritten link to the clipboard, ready to paste into an email, chat or page.
 
-- **Popup:** click the toolbar icon. Only the actions that apply to the open app are shown.
-- **Right-click menu:** the same actions under *Workspace Links* on any Docs, Sheets, Slides or Drawings page. A green ✓ on the toolbar icon confirms the copy.
-- Multi-account URLs (`/u/1/d/…`) keep their account index.
+| Item     | Link ends in        | Opens for the recipient as…            | Docs | Sheets | Slides | Drawings |
+|----------|---------------------|----------------------------------------|:----:|:------:|:------:|:--------:|
+| Copy     | `/copy`             | Google's "Make a copy" prompt          | ✓ | ✓ | ✓ | ✓ |
+| Preview  | `/preview`          | A clean, read-only view without menus  | ✓ | ✓ | ✓ | ✓ |
+| Template | `/template/preview` | A "Use template" page                  | ✓ | ✓ | ✓ |   |
+
+Hover an item to see a copy icon; after copying, it turns into a check mark and a snackbar names the link (e.g. "Preview link copied"). The popup stays open so you can copy several.
+
+**Download:** saves the file through Chromium's downloads, leaving the tab where it is.
+
+| Item | Export URL                                         | Docs | Sheets | Slides | Drawings |
+|------|----------------------------------------------------|:----:|:------:|:------:|:--------:|
+| PDF  | `/export?format=pdf` or `/export/pdf`              | ✓ | ✓ | ✓ | ✓ |
+| CSV  | `/export?format=csv&gid=…` (the sheet you're on)   |   | ✓ |   |   |
+| PNG  | `/export/png` (`?pageid=…`: the slide you're on)   |   |   | ✓ | ✓ |
+| SVG  | `/export/svg` (`?pageid=…`: the slide you're on)   |   |   | ✓ | ✓ |
+
+A snackbar shows "Downloading…", then "Downloaded" with a **Show** button that opens your file manager at the file.
+
+Multi-account URLs (`/u/1/d/…`) keep their account index.
+
+## On any other page
+
+- **Open Google Drive** — opens drive.google.com in a new tab.
+- **Create new:** Document, Spreadsheet, Presentation or Drawing, via Google's `docs.new`, `sheets.new`, `slides.new` and `drawings.new` shortcuts (created in your default Google account).
+
+## Right-click menu
+
+The same Share and Download actions appear under *Workspace Links* when you right-click a Docs, Sheets, Slides or Drawings page. A green ✓ on the toolbar icon confirms a copied link.
+
+## Design
+
+The popup follows Material Design 3: Google's GM3 colour roles in light and dark mode, the M3 type scale, state layers, press ripples and snackbars. Icons are Material Symbols, and Roboto is bundled so headings render at the correct weight on any system.
 
 ## Install
 
 1. Open `chrome://extensions` and turn on **Developer mode**.
 2. Click **Load unpacked** and choose this folder.
 
+Permissions: `activeTab` (read the current tab's URL when you use the extension), `contextMenus`, `scripting` (copy to the clipboard from the right-click menu) and `downloads`.
+
 ## Test
 
 ```sh
 node --test
 ```
+
+## Credits
+
+- Icons: [Material Symbols](https://fonts.google.com/icons), Apache License 2.0 — see `icons/material/`.
+- Font: [Roboto](https://github.com/googlefonts/roboto-classic) via Fontsource, SIL Open Font License 1.1 — see `fonts/`.
