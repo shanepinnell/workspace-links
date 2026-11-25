@@ -14,6 +14,7 @@
   --md-sys-color-secondary: #00639b;
   --md-sys-color-inverse-surface: #303030;
   --md-sys-color-inverse-on-surface: #f2f2f2;
+  --md-sys-color-inverse-primary: #a8c7fa;
 
   /* State layer opacities */
   --md-sys-state-hover: 0.08;
@@ -33,6 +34,7 @@
     --md-sys-color-secondary: #7fcfff;
     --md-sys-color-inverse-surface: #e3e3e3;
     --md-sys-color-inverse-on-surface: #303030;
+    --md-sys-color-inverse-primary: #0b57d0;
   }
 }
 
@@ -40,7 +42,7 @@
 
 body {
   margin: 0;
-  width: 240px;
+  width: 280px; /* M3 menu max width; fits snackbar text + action on one line */
   padding: 8px 0;
   background: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
@@ -50,21 +52,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Header: title-small */
-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  height: 40px;
-  padding: 0 12px;
-  font-weight: 500;
-  letter-spacing: 0.1px;
-}
-header img { width: 20px; height: 20px; }
-
-/* Section dividers */
-section,
-#unsupported {
+/* Dividers between sections */
+section + section {
   border-top: 1px solid var(--md-sys-color-outline-variant);
   margin-top: 8px;
   padding-top: 8px;
@@ -169,14 +158,6 @@ h2 {
 .list button.copied .i-check { visibility: visible; }
 
 /* Supporting text: body-small */
-#unsupported {
-  margin-bottom: 0;
-  padding: 8px 12px 0;
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
-  color: var(--md-sys-color-on-surface-variant);
-}
 /* Snackbar: inverse surface, extra-small corners, body-medium */
 #snackbar {
   position: fixed;
@@ -197,6 +178,42 @@ h2 {
   pointer-events: none;
 }
 #snackbar.show { opacity: 1; transform: none; }
+#snackbar .text { flex: 1; }
+#snackbar.has-action {
+  flex-wrap: wrap; /* M3: a long action drops below the text */
+  column-gap: 8px;
+  padding: 6px 8px 6px 16px;
+}
+#snackbar.has-action .text { padding: 8px 0; }
+#snackbar.show.has-action { pointer-events: auto; }
+
+/* Snackbar action: M3 text button in inverse-primary, label-large */
+#snackbar .action {
+  all: unset;
+  position: relative;
+  overflow: hidden;
+  margin-left: auto;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 18px;
+  font: 500 14px/20px var(--md-ref-typeface);
+  letter-spacing: 0.1px;
+  color: var(--md-sys-color-inverse-primary);
+  cursor: pointer;
+}
+#snackbar .action[hidden] { display: none; }
+#snackbar .action::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 150ms linear;
+}
+#snackbar .action:hover::before { opacity: var(--md-sys-state-hover); }
+#snackbar .action:focus-visible::before,
+#snackbar .action:active::before { opacity: var(--md-sys-state-pressed); }
+#snackbar .action:focus-visible { outline: 3px solid var(--md-sys-color-inverse-primary); outline-offset: -3px; }
 /* Reserve the snackbar's space (8 + 48 + 8px) so it never covers a row. */
 body:has(#actions:not([hidden])) { padding-bottom: 64px; }
 @media (prefers-reduced-motion: reduce) {

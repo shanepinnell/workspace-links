@@ -3,13 +3,6 @@
 // https://docs.google.com/<app>/[u/<n>/]d/<id>/...
 const DOC_URL = /^https:\/\/docs\.google\.com\/(document|spreadsheets|presentation|drawings)\/((?:u\/\d+\/)?d\/[A-Za-z0-9_-]+)/;
 
-export const APP_NAMES = {
-  document: 'Docs',
-  spreadsheets: 'Sheets',
-  presentation: 'Slides',
-  drawings: 'Drawings',
-};
-
 // Every action, in display order. `group` decides where it appears in the popup:
 // 'link' copies the hacked URL; 'download' downloads it.
 // `path` maps each supported app to the suffix that replaces /edit...

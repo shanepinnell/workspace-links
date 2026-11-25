@@ -6,12 +6,16 @@
     <link rel="stylesheet" href="popup.css">
   </head>
   <body>
-    <header>
-      <img src="icons/icon32.png" alt="" width="16" height="16">
-      <span id="app">Workspace Links</span>
-    </header>
-
-    <p id="unsupported" hidden>Open a Google Doc, Sheet, Slide deck or Drawing to use these.</p>
+    <!-- On pages that aren't a Google editor -->
+    <main id="home" hidden>
+      <section>
+        <div class="list" data-group="drive"></div>
+      </section>
+      <section>
+        <h2>Create new</h2>
+        <div class="list" data-group="new"></div>
+      </section>
+    </main>
 
     <main id="actions" hidden>
       <section>
@@ -24,7 +28,10 @@
       </section>
     </main>
 
-    <div id="snackbar" role="status" aria-live="polite"></div>
+    <div id="snackbar" role="status" aria-live="polite">
+      <span class="text"></span>
+      <button class="action" type="button" hidden></button>
+    </div>
 
     <script type="module" src="popup.js"></script>
   </body>

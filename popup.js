@@ -1,4 +1,4 @@
-import { APP_NAMES, ACTIONS, actionsFor, parseDocUrl, buildUrl } from './hacks.js';
+import { ACTIONS, actionsFor, parseDocUrl, buildUrl } from './hacks.js';
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -42,13 +42,40 @@ function fileIcon(type) {
 }
 
 // M3 snackbar: brief message at the bottom; a new message replaces the current one.
+// `ms: null` keeps it up until replaced. An optional action adds a text button.
 let snackTimer;
-function snackbar(text, ms = 4000) {
+function snackbar(text, { ms = 4000, action } = {}) {
   const el = $('#snackbar');
-  el.textContent = text;
+  const btn = el.querySelector('.action');
+  el.querySelector('.text').textContent = text;
+  btn.hidden = !action;
+  btn.onclick = null;
+  if (action) {
+    btn.textContent = action.label;
+    btn.onclick = action.onClick;
+  }
+  el.classList.toggle('has-action', !!action);
   el.classList.add('show');
   clearTimeout(snackTimer);
-  snackTimer = setTimeout(() => el.classList.remove('show'), ms);
+  if (ms != null) snackTimer = setTimeout(() => el.classList.remove('show'), ms);
+}
+
+// Resolve when a download finishes; reject if it's interrupted.
+function whenDownloaded(id) {
+  return new Promise((resolve, reject) => {
+    const onChanged = (delta) => {
+      if (delta.id !== id || !delta.state) return;
+      if (delta.state.current === 'complete') { done(); resolve(); }
+      if (delta.state.current === 'interrupted') { done(); reject(new Error(delta.error?.current || 'interrupted')); }
+    };
+    const done = () => chrome.downloads.onChanged.removeListener(onChanged);
+    chrome.downloads.onChanged.addListener(onChanged);
+    // In case it finished before the listener was attached.
+    chrome.downloads.search({ id }).then(([item]) => {
+      if (item?.state === 'complete') { done(); resolve(); }
+      if (item?.state === 'interrupted') { done(); reject(new Error(item.error || 'interrupted')); }
+    });
+  });
 }
 
 // M3 pressed state: a ripple spreading from the pointer.
@@ -67,10 +94,30 @@ function ripple(e) {
 const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 const doc = parseDocUrl(tab?.url);
 
+// Shown on pages that aren't a Google editor. Colours are the apps' own.
+const HOME_ITEMS = [
+  { group: 'drive', label: 'Open Google Drive', url: 'https://drive.google.com/', icon: 'folder_open' },
+  { group: 'new', label: 'Document',     url: 'https://docs.new',     icon: 'description-fill', color: '#4285f4' },
+  { group: 'new', label: 'Spreadsheet',  url: 'https://sheets.new',   icon: 'table_chart-fill', color: '#0f9d58' },
+  { group: 'new', label: 'Presentation', url: 'https://slides.new',   icon: 'slideshow-fill',   color: '#f4b400' },
+  { group: 'new', label: 'Drawing',      url: 'https://drawings.new', icon: 'draw-fill',        color: '#db4437' },
+];
+
 if (!doc) {
-  $('#unsupported').hidden = false;
+  $('#home').hidden = false;
+  for (const item of HOME_ITEMS) {
+    const btn = document.createElement('button');
+    const icon = symbol(item.icon, 'hack-icon');
+    if (item.color) icon.style.color = item.color;
+    btn.append(icon, item.label);
+    btn.addEventListener('click', async () => {
+      await chrome.tabs.create({ url: item.url });
+      window.close();
+    });
+    $(`.list[data-group="${item.group}"]`).append(btn);
+  }
+  $('#home').addEventListener('pointerdown', ripple);
 } else {
-  $('#app').textContent = `Google ${APP_NAMES[doc.app]}`;
   $('#actions').hidden = false;
 
   for (const action of actionsFor(doc)) {
@@ -94,11 +141,22 @@ if (!doc) {
     if (!btn) return;
     const action = ACTIONS.find((a) => a.id === btn.dataset.action);
     const url = buildUrl(doc, action.id);
+    const format = action.id.toUpperCase();
     try {
       if (action.group === 'download') {
-        await chrome.downloads.download({ url });
-        snackbar(`Downloading ${action.label}…`);
-        setTimeout(() => window.close(), 1500);
+        // The popup stays open; when the file lands, offer to show it in the file manager.
+        const id = await chrome.downloads.download({ url });
+        snackbar(`Downloading ${format}…`, { ms: null });
+        try {
+          await whenDownloaded(id);
+        } catch (err) {
+          snackbar(`${format} download failed`);
+          console.error(err);
+          return;
+        }
+        snackbar(`${format} downloaded`, {
+          action: { label: 'Show in folder', onClick: () => chrome.downloads.show(id) },
+        });
       } else {
         await navigator.clipboard.writeText(url);
         // "Copy link copied" reads badly, so that one is named for what the link does.
