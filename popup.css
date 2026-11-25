@@ -173,7 +173,7 @@ h2 + .list button { padding-left: 24px; }
   -webkit-mask: var(--icon) center / contain no-repeat;
   mask: var(--icon) center / contain no-repeat;
 }
-.hack-icon { color: var(--md-sys-color-on-surface-variant); }
+.item-icon { color: var(--md-sys-color-on-surface-variant); }
 .file-icon { width: 16px; height: 20px; margin: 0 2px; flex: none; }
 
 /* Trailing copy hint */

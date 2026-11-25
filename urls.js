@@ -4,7 +4,7 @@
 const DOC_URL = /^https:\/\/docs\.google\.com\/(document|spreadsheets|presentation|drawings)\/((?:u\/\d+\/)?d\/[A-Za-z0-9_-]+)/;
 
 // Every action, in display order. `group` decides where it appears in the popup:
-// 'link' copies the hacked URL; 'download' downloads it.
+// 'link' copies the rewritten URL; 'download' downloads it.
 // `path` maps each supported app to the suffix that replaces /edit...
 export const ACTIONS = [
   { id: 'copy',     label: 'Copy',             group: 'link',     path: { document: 'copy', spreadsheets: 'copy', presentation: 'copy', drawings: 'copy' } },

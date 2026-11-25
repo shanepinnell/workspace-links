@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseDocUrl, buildUrl, actionsFor } from './hacks.js';
+import { parseDocUrl, buildUrl, actionsFor } from './urls.js';
 
 const D = 'https://docs.google.com';
 const ID = '1GuARFGTqiIBcMpAEI3K_SuT1UiLwMxjHOwVm88yNMeY';

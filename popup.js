@@ -1,4 +1,4 @@
-import { ACTIONS, actionsFor, parseDocUrl, buildUrl } from './hacks.js';
+import { ACTIONS, actionsFor, parseDocUrl, buildUrl } from './urls.js';
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -12,8 +12,8 @@ function symbol(name, extraClass = '') {
   return el;
 }
 
-const HACK_SYMBOLS = { copy: 'file_copy', preview: 'visibility', template: 'dashboard' };
-const hackIcon = (id) => (HACK_SYMBOLS[id] ? symbol(HACK_SYMBOLS[id], 'hack-icon') : null);
+const SHARE_SYMBOLS = { copy: 'file_copy', preview: 'visibility', template: 'dashboard' };
+const shareIcon = (id) => (SHARE_SYMBOLS[id] ? symbol(SHARE_SYMBOLS[id], 'item-icon') : null);
 
 // Copy icon shown on hover, swapped for a check mark after copying.
 function copyHint() {
@@ -120,7 +120,7 @@ if (!doc) {
   $('#home').hidden = false;
   for (const item of HOME_ITEMS) {
     const btn = document.createElement('button');
-    const icon = symbol(item.icon, 'hack-icon');
+    const icon = symbol(item.icon, 'item-icon');
     if (item.color) icon.style.color = item.color;
     btn.append(icon, item.label);
     btn.addEventListener('click', async () => {
@@ -136,7 +136,7 @@ if (!doc) {
   for (const action of actionsFor(doc)) {
     const btn = document.createElement('button');
     btn.dataset.action = action.id;
-    const icon = action.group === 'download' ? fileIcon(action.id) : hackIcon(action.id);
+    const icon = action.group === 'download' ? fileIcon(action.id) : shareIcon(action.id);
     if (icon) btn.append(icon);
     btn.append(action.label);
     if (action.group === 'link') btn.append(copyHint());
