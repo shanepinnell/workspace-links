@@ -11,7 +11,7 @@ export const ACTIONS = [
   { id: 'preview',  label: 'Preview',          group: 'link',     path: { document: 'preview', spreadsheets: 'preview', presentation: 'preview', drawings: 'preview' } },
   { id: 'template', label: 'Template',         group: 'link',     path: { document: 'template/preview', spreadsheets: 'template/preview', presentation: 'template/preview' } },
   { id: 'pdf',      label: 'PDF',              group: 'download', path: { document: 'export?format=pdf', spreadsheets: 'export?format=pdf', presentation: 'export/pdf', drawings: 'export/pdf' } },
-  { id: 'csv',      label: 'CSV (this sheet)', group: 'download', path: { spreadsheets: 'export?format=csv' }, keepGid: true },
+  { id: 'csv',      label: 'CSV',              group: 'download', path: { spreadsheets: 'export?format=csv' }, keepGid: true },
   { id: 'png',      label: 'PNG',              group: 'download', path: { presentation: 'export/png', drawings: 'export/png' }, keepSlide: true },
   { id: 'svg',      label: 'SVG',              group: 'download', path: { presentation: 'export/svg', drawings: 'export/svg' }, keepSlide: true },
 ];

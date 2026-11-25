@@ -42,7 +42,7 @@
 
 body {
   margin: 0;
-  width: 280px; /* M3 menu max width; fits snackbar text + action on one line */
+  width: 240px; /* widest content is the "Downloaded + Show" snackbar (~218px) */
   padding: 8px 0;
   background: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
