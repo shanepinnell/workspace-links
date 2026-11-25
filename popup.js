@@ -51,13 +51,26 @@ function snackbar(text, { ms = 4000, action } = {}) {
   btn.hidden = !action;
   btn.onclick = null;
   if (action) {
-    btn.textContent = action.label;
+    // M3 text button, with an optional leading icon.
+    btn.replaceChildren(...(action.icon ? [symbol(action.icon)] : []), action.label);
+    btn.classList.toggle('with-icon', !!action.icon);
+    if (action.ariaLabel) btn.setAttribute('aria-label', action.ariaLabel);
+    else btn.removeAttribute('aria-label');
     btn.onclick = action.onClick;
   }
   el.classList.toggle('has-action', !!action);
+  el.classList.remove('leaving');
   el.classList.add('show');
   clearTimeout(snackTimer);
-  if (ms != null) snackTimer = setTimeout(() => el.classList.remove('show'), ms);
+  if (ms != null) snackTimer = setTimeout(hideSnackbar, ms);
+}
+
+// Fade out, then take it out of the layout so the popup shrinks back.
+function hideSnackbar() {
+  const el = $('#snackbar');
+  el.classList.add('leaving');
+  // Matches the 150ms snack-out animation; a timer is more reliable than animationend.
+  snackTimer = setTimeout(() => el.classList.remove('show', 'leaving'), 150);
 }
 
 // Resolve when a download finishes; reject if it's interrupted.
@@ -141,21 +154,20 @@ if (!doc) {
     if (!btn) return;
     const action = ACTIONS.find((a) => a.id === btn.dataset.action);
     const url = buildUrl(doc, action.id);
-    const format = action.id.toUpperCase();
     try {
       if (action.group === 'download') {
         // The popup stays open; when the file lands, offer to show it in the file manager.
         const id = await chrome.downloads.download({ url });
-        snackbar(`Downloading ${format}…`, { ms: null });
+        snackbar('Downloading…', { ms: null });
         try {
           await whenDownloaded(id);
         } catch (err) {
-          snackbar(`${format} download failed`);
+          snackbar('Download failed');
           console.error(err);
           return;
         }
-        snackbar(`${format} downloaded`, {
-          action: { label: 'Show in folder', onClick: () => chrome.downloads.show(id) },
+        snackbar('Downloaded', {
+          action: { label: 'Show', ariaLabel: 'Show in folder', icon: 'folder_open', onClick: () => chrome.downloads.show(id) },
         });
       } else {
         await navigator.clipboard.writeText(url);
