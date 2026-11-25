@@ -23,22 +23,45 @@ function copyHint() {
   return hint;
 }
 
-// File-type icon: a page with a folded corner, coloured per format, with the extension on it.
+// File-type icon: Material Symbols `draft` (filled), coloured per format, with the extension on it.
+// Inlined (not a mask) so the label can sit on top; the path is read from the bundled SVG.
 const FILE_COLORS = { pdf: '#d93025', csv: '#188038', png: '#8430ce', svg: '#e37400' };
+const DRAFT_PATH = (await (await fetch('icons/material/draft-fill.svg')).text()).match(/ d="([^"]+)"/)[1];
 function fileIcon(type) {
   const color = FILE_COLORS[type];
   if (!color) return null;
-  const ns = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(ns, 'svg');
-  svg.setAttribute('viewBox', '0 0 20 24');
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '160 -880 640 800'); // the page's bounds in the 960 grid
   svg.setAttribute('class', 'file-icon');
   svg.setAttribute('aria-hidden', 'true');
   svg.innerHTML = `
-    <path d="M3 1h10l6 6v14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2z" fill="${color}"/>
-    <path d="M13 1v4a2 2 0 0 0 2 2h4z" fill="#fff" fill-opacity=".55"/>
-    <text x="10" y="18.5" text-anchor="middle" font-size="6.2" font-weight="700"
+    <path d="${DRAFT_PATH}" fill="${color}"/>
+    <text x="480" y="-200" text-anchor="middle" font-size="200" font-weight="700"
           font-family="system-ui, sans-serif" fill="#fff">${type.toUpperCase()}</text>`;
   return svg;
+}
+
+// M3 snackbar: brief message at the bottom; a new message replaces the current one.
+let snackTimer;
+function snackbar(text, ms = 4000) {
+  const el = $('#snackbar');
+  el.textContent = text;
+  el.classList.add('show');
+  clearTimeout(snackTimer);
+  snackTimer = setTimeout(() => el.classList.remove('show'), ms);
+}
+
+// M3 pressed state: a ripple spreading from the pointer.
+function ripple(e) {
+  const btn = e.target.closest('.list button');
+  if (!btn) return;
+  const r = btn.getBoundingClientRect();
+  const size = Math.hypot(r.width, r.height) * 2;
+  const dot = document.createElement('span');
+  dot.className = 'ripple';
+  dot.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+  btn.append(dot);
+  dot.addEventListener('animationend', () => dot.remove());
 }
 
 const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -64,6 +87,8 @@ if (!doc) {
     s.hidden = !s.querySelector('button');
   });
 
+  $('#actions').addEventListener('pointerdown', ripple);
+
   $('#actions').addEventListener('click', async (e) => {
     const btn = e.target.closest('button[data-action]');
     if (!btn) return;
@@ -72,19 +97,20 @@ if (!doc) {
     try {
       if (action.group === 'download') {
         await chrome.downloads.download({ url });
-        $('#toast').textContent = `Downloading ${action.label}…`;
-        setTimeout(() => window.close(), 900);
+        snackbar(`Downloading ${action.label}…`);
+        setTimeout(() => window.close(), 1500);
       } else {
         await navigator.clipboard.writeText(url);
-        // Brief green flash; the popup stays open so more links can be copied.
-        btn.classList.remove('copied');
-        void btn.offsetWidth; // restart the animation on repeat clicks
+        // "Copy link copied" reads badly, so that one is named for what the link does.
+        snackbar(action.id === 'copy' ? 'Make-a-copy link copied' : `${action.label} link copied`);
+        // The row's trailing icon shows a check; the popup stays open for more copies.
+        document.querySelectorAll('.list button.copied').forEach((b) => b !== btn && b.classList.remove('copied'));
         btn.classList.add('copied');
         clearTimeout(btn._copiedTimer);
-        btn._copiedTimer = setTimeout(() => btn.classList.remove('copied'), 1200);
+        btn._copiedTimer = setTimeout(() => btn.classList.remove('copied'), 2000);
       }
     } catch (err) {
-      $('#toast').textContent = action.group === 'download' ? 'Download failed' : 'Could not copy link';
+      snackbar(action.group === 'download' ? 'Download failed' : 'Couldn’t copy link');
       console.error(err);
     }
   });
